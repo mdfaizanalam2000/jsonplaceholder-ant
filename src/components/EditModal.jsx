@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Modal } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
 
-const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo, todos, setTodos }) => {
-
+const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo, todos, setTodos, messageApi }) => {
     const [form] = Form.useForm();
 
-    const handleCancel = () => {
+    useEffect(() => {
         form.setFieldsValue(selectedTodo)
+        //eslint-disable-next-line
+    }, [isModalOpen])
+
+    const handleCancel = () => {
+        setSelectedTodo({})
         setIsModalOpen(false);
     };
 
@@ -20,7 +24,9 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
             }
             return todo
         }))
+        setSelectedTodo({})
         setIsModalOpen(false)
+        messageApi.success("Task edited!")
     };
     const onFinishFailed = (errorInfo) => {
         alert('Failed:', errorInfo);
@@ -30,11 +36,12 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
         setSelectedTodo((prevState) => {
             return { ...prevState, completed: e.target.checked }
         })
+        form.setFieldValue("completed", e.target.checked)
     }
 
     return (
         <>
-            <Modal title="Edit Todo Details" open={isModalOpen} onCancel={handleCancel} footer={false}>
+            <Modal forceRender title="Edit Todo Details" open={isModalOpen} onCancel={handleCancel} footer={false}>
                 <Form form={form}
                     name="basic"
                     labelCol={{

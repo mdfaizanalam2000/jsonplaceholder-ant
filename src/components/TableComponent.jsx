@@ -1,4 +1,4 @@
-import { Table } from 'antd'
+import { Table, message } from 'antd'
 import { EyeFilled, EditFilled, DeleteFilled } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
 import ViewModal from './ViewModal'
@@ -9,6 +9,8 @@ const TableComponent = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [selectedTodo, setSelectedTodo] = useState({})
+
+    const [messageApi, contextHolder] = message.useMessage();
 
     const showModal = (todo) => {
         setSelectedTodo(todo)
@@ -54,6 +56,7 @@ const TableComponent = () => {
             title: "Actions",
             render: (item) => {
                 return <>
+                    {contextHolder}
                     <EyeFilled className='icon' onClick={() => showModal(item)} />
                     <EditFilled className='icon' onClick={() => showEditModal(item)} />
                     <DeleteFilled className='icon' onClick={() => handleDeleteTodo(item)} />
@@ -66,6 +69,7 @@ const TableComponent = () => {
         setTodos(todos.filter((todo) => {
             return todo.id !== item.id
         }))
+        messageApi.success('Task deleted!');
     }
 
     return (
@@ -73,7 +77,7 @@ const TableComponent = () => {
             <h1 className='text-center'>List of todos</h1>
             <Table dataSource={todos} columns={columns} rowKey="id" />
             <ViewModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedTodo={selectedTodo} setSelectedTodo={setSelectedTodo} />
-            <EditModal isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} selectedTodo={selectedTodo} setSelectedTodo={setSelectedTodo} todos={todos} setTodos={setTodos} />
+            <EditModal isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} selectedTodo={selectedTodo} setSelectedTodo={setSelectedTodo} todos={todos} setTodos={setTodos} messageApi={messageApi} />
         </>
     )
 }
