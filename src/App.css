@@ -15,3 +15,22 @@
 .btn {
     margin: 0 0.5rem;
 }
+
+.my-1 {
+    margin: 1rem 0;
+}
+
+@media only screen and (max-width:900px) {
+    .container {
+        padding: 0;
+    }
+
+    .icon {
+        margin: 0 5px;
+        font-size: small;
+    }
+
+    .table {
+        overflow-x: scroll;
+    }
+}

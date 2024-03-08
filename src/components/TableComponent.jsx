@@ -1,13 +1,15 @@
-import { Table, message } from 'antd'
-import { EyeFilled, EditFilled, DeleteFilled } from '@ant-design/icons'
+import { Table, message, Button } from 'antd'
+import { EyeFilled, EditFilled, DeleteFilled, PlusSquareOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
 import ViewModal from './ViewModal'
 import EditModal from './EditModal'
+import AddTodoModal from './AddTodoModal'
 
 const TableComponent = () => {
     const [todos, setTodos] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
     const [selectedTodo, setSelectedTodo] = useState({})
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -50,7 +52,7 @@ const TableComponent = () => {
             title: 'Completed',
             dataIndex: 'completed',
             key: 'completed',
-            render: (text) => text === true ? "Yes" : "No"
+            render: (text) => text ? "Yes" : "No"
         },
         {
             title: "Actions",
@@ -75,8 +77,12 @@ const TableComponent = () => {
     return (
         <>
             <h1 className='text-center'>List of todos</h1>
-            <Table dataSource={todos} columns={columns} rowKey="id" />
+            <div className='text-center my-1'>
+                <Button onClick={() => setIsAddModalOpen(true)} type="primary">Add new <PlusSquareOutlined /></Button>
+            </div>
+            <Table dataSource={todos} columns={columns} rowKey="id" className='table' />
             <ViewModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedTodo={selectedTodo} setSelectedTodo={setSelectedTodo} />
+            <AddTodoModal isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} setTodos={setTodos} messageApi={messageApi} />
             <EditModal isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} selectedTodo={selectedTodo} setSelectedTodo={setSelectedTodo} todos={todos} setTodos={setTodos} messageApi={messageApi} />
         </>
     )

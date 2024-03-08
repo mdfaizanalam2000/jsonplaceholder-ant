@@ -1,54 +1,34 @@
-import React, { useEffect } from 'react'
-import { Modal } from 'antd';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Modal } from 'antd';
+import React from 'react'
 
-const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo, todos, setTodos, messageApi }) => {
-    const [form] = Form.useForm();
-
-    useEffect(() => {
-        form.setFieldsValue(selectedTodo)
-        //eslint-disable-next-line
-    }, [isModalOpen])
+const AddTodoModal = ({ isAddModalOpen, setIsAddModalOpen, setTodos, messageApi }) => {
+    const [createForm] = Form.useForm();
 
     const handleCancel = () => {
-        setSelectedTodo({})
-        setIsModalOpen(false);
+        createForm.setFieldsValue([])
+        setIsAddModalOpen(false);
     };
 
     const onFinish = (values) => {
-        values = { ...values, completed: selectedTodo.completed }
-
-        setTodos(todos.map((todo) => {
-            if (todo.id === selectedTodo.id) {
-                return values
-            }
-            return todo
-        }))
-        setSelectedTodo({})
-        setIsModalOpen(false)
-        messageApi.success("Task edited!")
+        setTodos(prevState => [values, ...prevState])
+        createForm.setFieldsValue([])
+        setIsAddModalOpen(false)
+        messageApi.success("Task created!")
     };
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
-    const handleCheckboxChange = (e) => {
-        setSelectedTodo((prevState) => {
-            return { ...prevState, completed: e.target.checked }
-        })
-        form.setFieldValue("completed", e.target.checked)
-    }
-
     return (
         <>
-            <Modal forceRender title="Edit Todo Details" open={isModalOpen} onCancel={handleCancel} footer={false}>
-                <Form form={form}
-                    name="basic"
+            <Modal title="Add Todo Details" open={isAddModalOpen} onCancel={handleCancel} footer={false}>
+                <Form form={createForm}
+                    name="createForm"
                     labelCol={{
-                        span: 8,
+                        span: 10,
                     }}
                     wrapperCol={{
-                        span: 16,
+                        span: 14,
                     }}
                     style={{
                         maxWidth: 600,
@@ -58,7 +38,7 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
                     autoComplete="off"
                 >
                     <Form.Item
-                        label="UserID (not editable)"
+                        label="UserID (not editable later)"
                         name="userId"
                         rules={[
                             {
@@ -66,14 +46,12 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
                                 message: 'Please input your userid!',
                             },
                         ]}
-                        initialValue={selectedTodo.userId}
-
                     >
-                        <Input disabled />
+                        <Input />
                     </Form.Item>
 
                     <Form.Item
-                        label="TodoID (not editable)"
+                        label="TodoID (not editable later)"
                         name="id"
                         rules={[
                             {
@@ -81,9 +59,8 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
                                 message: 'Please input your todoid!',
                             },
                         ]}
-                        initialValue={selectedTodo.id}
                     >
-                        <Input disabled />
+                        <Input />
                     </Form.Item>
 
                     <Form.Item
@@ -95,21 +72,20 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
                                 message: 'Please input your title!',
                             },
                         ]}
-                        initialValue={selectedTodo.title}
                     >
                         <Input />
                     </Form.Item>
 
                     <Form.Item
                         name="completed"
-                        // valuePropName="checked"
+                        valuePropName='checked'
                         wrapperCol={{
                             offset: 8,
                             span: 16,
                         }}
-                        initialValue={selectedTodo.completed}
+                        initialValue={false}
                     >
-                        <Checkbox checked={selectedTodo.completed} onChange={(e) => handleCheckboxChange(e)}>Completed</Checkbox>
+                        <Checkbox>Completed</Checkbox>
                     </Form.Item>
 
                     <Form.Item
@@ -119,7 +95,7 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
                         }}
                     >
                         <Button className='btn' type="primary" htmlType="submit">
-                            Save Changes
+                            Create
                         </Button>
                         <Button type="primary" danger onClick={() => handleCancel()}>
                             Cancel
@@ -131,4 +107,4 @@ const EditModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo,
     );
 }
 
-export default EditModal
+export default AddTodoModal

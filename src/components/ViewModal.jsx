@@ -10,9 +10,10 @@ const ViewModal = ({ isModalOpen, setIsModalOpen, selectedTodo, setSelectedTodo 
         setSelectedTodo({});
         setIsModalOpen(false);
     };
+
     return (
         <>
-            <Modal title="Todo Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal cancelButtonProps={{ style: { display: 'none' } }} title="Todo Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <p><b>UserID: </b>{selectedTodo.userId}</p>
                 <p><b>TodoID: </b>{selectedTodo.id}</p>
                 <p><b>Title: </b>{selectedTodo.title}</p>
