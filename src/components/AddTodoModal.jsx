@@ -11,7 +11,7 @@ const AddTodoModal = ({ isAddModalOpen, setIsAddModalOpen, setTodos, messageApi 
 
     const onFinish = (values) => {
         setTodos(prevState => [values, ...prevState])
-        createForm.setFieldsValue([])
+        createForm.resetFields()
         setIsAddModalOpen(false)
         messageApi.success("Task created!")
     };
@@ -47,7 +47,7 @@ const AddTodoModal = ({ isAddModalOpen, setIsAddModalOpen, setTodos, messageApi 
                             },
                         ]}
                     >
-                        <Input />
+                        <Input type='number' />
                     </Form.Item>
 
                     <Form.Item
@@ -60,7 +60,7 @@ const AddTodoModal = ({ isAddModalOpen, setIsAddModalOpen, setTodos, messageApi 
                             },
                         ]}
                     >
-                        <Input />
+                        <Input type='number' />
                     </Form.Item>
 
                     <Form.Item
